@@ -10,78 +10,62 @@ class Parser
     yield self
   end
 
-  def option(name, desc, setting = {})
-    option = OpenStruct.new
-    option.name = name
-    option.desc = desc
-    option.default = setting[:default]
-    option.short = setting[:short]
-    option.value_in_set = setting[:value_in_set]
-    option.value_matches = setting[:value_matches]
-    option.value_satisfies = setting[:value_satisfies]
-    @options << option
+  def option(name, desc, settings = {})
+    @options << [name, desc, settings]
   end
   
-  def determine_short(name)
-    long = name.to_s.chars
-    short = ""
-    long.each do |c|
-      short = c
-      break unless @used_short.include?(short)
+  def short_from(name)
+    name.to_s.chars.each do |c|
+      next if @used_short.include?(c)
+      return c # returns from short_from method
     end
-    short
   end
   
   def validate(options)
     options.each_pair do |key, value|
       opt = nil
-      @options.each do |o|
-        opt = o if o.name == key
+      @options.each { |o| opt = o if o[0] == key }
+      unless opt[2][:value_in_set].nil? || opt[2][:value_in_set].include?(value)
+        puts "Parameter for " << key.to_s << " must be in [" << opt[2][:value_in_set].join(",") << "]" ; exit(1)
       end
-      unless opt.value_in_set.nil? || opt.value_in_set.include?(value)
-        puts "Parameter for " << key.to_s << " must be in [" << opt.value_in_set.join(",") << "]"
-        exit
+      unless opt[2][:value_matches].nil? || opt[2][:value_matches] =~ value
+        puts "Parameter must match /" << opt[2][:value_matches].source << "/" ; exit(1)
       end
-      unless opt.value_matches.nil? || opt.value_matches =~ value
-        puts "Parameter must match /" << opt.value_matches.source << "/"
-        exit
-      end
-      
-      unless opt.value_satisfies.nil? || opt.value_satisfies.call(value)
-        puts "Parameter must satisfy given conditions (see description)"
-        exit
+      unless opt[2][:value_satisfies].nil? || opt[2][:value_satisfies].call(value)
+        puts "Parameter must satisfy given conditions (see description)" ; exit(1)
       end
     end
   end
 
   def process!
-    opts = {}
-    optparser = OptionParser.new do |p|
-      p.banner = @banner unless @banner.nil?
+    options = {}
+    optionparser = OptionParser.new do |p|
       @options.each do |o|
-        short = o.short || determine_short(o.name)
-        @used_short << short
-        opts[o.name] = o.default || false
-        klass = o.default.class
-        klass = Integer if klass == Fixnum
-        if klass == TrueClass || klass == FalseClass || klass == NilClass
-          p.on("-" << short, "--[no-]" << o.name.to_s.gsub("_", "-"), o.desc) {|x| opts[o.name] = x}
-        else
-          p.on("-" << short, "--" << o.name.to_s.gsub("_", "-") << " " << o.default.to_s, klass, o.desc) {|x| opts[o.name] = x}
+        @used_short << short = o[2][:short] || short_from(o[0])
+        options[o[0]] = o[2][:default] || false # set default
+        klass = o[2][:default].class == Fixnum ? Integer : o[2][:default].class
+        
+        if klass == TrueClass || klass == FalseClass || klass == NilClass # boolean switch
+          p.on("-" << short, "--[no-]" << o[0].to_s.gsub("_", "-"), o[1]) {|x| options[o[0]] = x}
+        else # argument with parameter
+          p.on("-" << short, "--" << o[0].to_s.gsub("_", "-") << " " << o[2][:default].to_s, klass, o[1]) {|x| options[o[0]] = x}
         end
       end
+      
+      p.banner = @banner unless @banner.nil?
       p.on_tail("-h", "--help", "Show this message") {puts p ; exit}
       short = @used_short.include?("v") ? "-V" : "-v"
       p.on_tail(short, "--version", "Print version") {puts @version ; exit} unless @version.nil?
     end
+    
     begin
-      optparser.parse!(ARGV)
+      optionparser.parse!(ARGV)
     rescue OptionParser::ParseError => e
-      puts e.message
-      exit
+      puts e.message ; exit(1)
     end
-    validate(opts)
-    opts
+    
+    validate(options)
+    options
   end
 end
 
@@ -92,7 +76,7 @@ options = Parser.new do |p|
   p.option :verbose, "enable verbose output"
   p.option :mutation, "set mutation", :default => "MightyMutation", :value_matches => /Mutation/
   p.option :plus_selection, "use plus-selection if set", :default => true
-  p.option :selection, "selection used", :default => "BestSelection", :short => "l"
+  p.option :selection, "selection used", :default => "BestSelection"#, :short => "l"
   p.option :chance, "set mutation chance", :default => 0.8, :value_satisfies => lambda {|x| x >= 0.0 && x <= 1.0}
 end.process!
 

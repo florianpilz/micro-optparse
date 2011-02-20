@@ -4,6 +4,7 @@ require 'optparse'
 class Parser
   def initialize
     @options = []
+    @used_short = []
     yield self
   end
 
@@ -18,19 +19,31 @@ class Parser
     option.default = setting[:default]
     @options << option
   end
+  
+  def determine_short(name)
+    long = name.to_s.chars
+    short = ""
+    long.each do |c|
+      short = c
+      break unless @used_short.include?(short)
+    end
+    short
+  end
 
   def process!
     opts = {}
     optparser = OptionParser.new do |p|
       p.banner = @banner
       @options.each do |o|
+        short = determine_short(o.name)
+        @used_short << short
         opts[o.name] = o.default || false
         klass = o.default.class
         klass = Integer if klass == Fixnum
         if klass == TrueClass || klass == FalseClass || klass == NilClass
-          p.on("-" << o.name.to_s.chars.first, "--[no-]" << o.name.to_s.gsub("_", "-"), o.desc) {|x| opts[o.name] = x}
+          p.on("-" << short, "--[no-]" << o.name.to_s.gsub("_", "-"), o.desc) {|x| opts[o.name] = x}
         else
-          p.on("-" << o.name.to_s.chars.first, "--" << o.name.to_s.gsub("_", "-") << " " << o.default.to_s, klass, o.desc) {|x| opts[o.name] = x}
+          p.on("-" << short, "--" << o.name.to_s.gsub("_", "-") << " " << o.default.to_s, klass, o.desc) {|x| opts[o.name] = x}
         end
       end
       p.on_tail("-h", "--help", "Show this message") do
@@ -49,11 +62,12 @@ class Parser
 end
 
 options = Parser.new do |p|
-  p.banner "test"
+  # p.banner "test"
   p.option :severity, "set severity", :default => 4
   p.option :verbose, "enable verbose output"
   p.option :mutation, "set mutation", :default => "MightyMutation"
   p.option :plus_selection, "use plus-selection if set", :default => true
+  p.option :selection, "selection used", :default => "BestSelection"
   p.option :chance, "set mutation chance", :default => 0.8
 end.process!
 

@@ -27,12 +27,17 @@ class Parser
         opts[o.name] = o.default
         klass = o.default.class
         klass = Integer if klass == Fixnum
-        p.on("-" << o.name.to_s.chars.first, "--" << o.name.to_s << " " << o.default, klass, o.desc) do |x|
+        p.on("-" << o.name.to_s.chars.first, "--" << o.name.to_s << " " << o.default.to_s, klass, o.desc) do |x|
           opts[o.name] = x
         end
       end
     end
-    optparser.parse!(ARGV)
+    begin
+      optparser.parse!(ARGV)
+    rescue OptionParser::ParseError => e
+      puts e.message
+      exit
+    end
     opts
   end
 end
@@ -40,6 +45,10 @@ end
 options = Parser.new do |p|
   p.banner "test"
   p.option :verbose, "set verbosity", :default => 4
+  p.option :mutation, "set mutation", :default => "MightyMutation"
+  p.option :chance, "set mutation chance", :default => 0.8
 end.process!
 
 puts options[:verbose]
+puts options[:mutation]
+puts options[:chance]

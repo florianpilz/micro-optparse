@@ -21,7 +21,7 @@ class Parser
     end
   end
   
-  def validate(options)
+  def validate(options) # remove this method and call in process! if you don't need validations
     options.each_pair do |key, value|
       opt = nil
       @options.each { |o| opt = o if o[0] == key }

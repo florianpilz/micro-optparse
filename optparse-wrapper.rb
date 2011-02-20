@@ -11,7 +11,7 @@ class Parser
     @banner = text
   end
 
-  def option(name, desc, setting = {:default => false})
+  def option(name, desc, setting = {})
     option = OpenStruct.new
     option.name = name
     option.desc = desc

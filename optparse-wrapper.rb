@@ -31,6 +31,10 @@ class Parser
           opts[o.name] = x
         end
       end
+      p.on("-h", "--help", "Show this message") do
+        puts p
+        exit
+      end
     end
     begin
       optparser.parse!(ARGV)

@@ -17,6 +17,7 @@ class Parser
     option.name = name
     option.desc = desc
     option.default = setting[:default]
+    option.short = setting[:short]
     @options << option
   end
   
@@ -35,7 +36,7 @@ class Parser
     optparser = OptionParser.new do |p|
       p.banner = @banner
       @options.each do |o|
-        short = determine_short(o.name)
+        short = o.short || determine_short(o.name)
         @used_short << short
         opts[o.name] = o.default || false
         klass = o.default.class
@@ -67,7 +68,7 @@ options = Parser.new do |p|
   p.option :verbose, "enable verbose output"
   p.option :mutation, "set mutation", :default => "MightyMutation"
   p.option :plus_selection, "use plus-selection if set", :default => true
-  p.option :selection, "selection used", :default => "BestSelection"
+  p.option :selection, "selection used", :default => "BestSelection", :short => "l"
   p.option :chance, "set mutation chance", :default => 0.8
 end.process!
 
@@ -75,4 +76,5 @@ puts options[:severity]
 puts options[:verbose]
 puts options[:mutation]
 puts options[:plus_selection]
+puts options[:selection]
 puts options[:chance]

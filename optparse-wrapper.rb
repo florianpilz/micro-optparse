@@ -6,32 +6,34 @@ class Parser
     @options = []
     yield self
   end
-  
+
   def banner(text)
     @banner = text
   end
-  
-  def option(name, desc, setting)
+
+  def option(name, desc, setting = {:default => false})
     option = OpenStruct.new
     option.name = name
     option.desc = desc
     option.default = setting[:default]
     @options << option
   end
-  
+
   def process!
     opts = {}
     optparser = OptionParser.new do |p|
       p.banner = @banner
       @options.each do |o|
-        opts[o.name] = o.default
+        opts[o.name] = o.default || false
         klass = o.default.class
         klass = Integer if klass == Fixnum
-        p.on("-" << o.name.to_s.chars.first, "--" << o.name.to_s << " " << o.default.to_s, klass, o.desc) do |x|
-          opts[o.name] = x
+        if klass == TrueClass || klass == FalseClass || klass == NilClass
+          p.on("-" << o.name.to_s.chars.first, "--[no-]" << o.name.to_s.gsub("_", "-"), o.desc) {|x| opts[o.name] = x}
+        else
+          p.on("-" << o.name.to_s.chars.first, "--" << o.name.to_s.gsub("_", "-") << " " << o.default.to_s, klass, o.desc) {|x| opts[o.name] = x}
         end
       end
-      p.on("-h", "--help", "Show this message") do
+      p.on_tail("-h", "--help", "Show this message") do
         puts p
         exit
       end
@@ -48,11 +50,15 @@ end
 
 options = Parser.new do |p|
   p.banner "test"
-  p.option :verbose, "set verbosity", :default => 4
+  p.option :severity, "set severity", :default => 4
+  p.option :verbose, "enable verbose output"
   p.option :mutation, "set mutation", :default => "MightyMutation"
+  p.option :plus_selection, "use plus-selection if set", :default => true
   p.option :chance, "set mutation chance", :default => 0.8
 end.process!
 
+puts options[:severity]
 puts options[:verbose]
 puts options[:mutation]
+puts options[:plus_selection]
 puts options[:chance]

@@ -2,14 +2,12 @@ require 'ostruct'
 require 'optparse'
 
 class Parser
+  attr_accessor :banner, :version
+  
   def initialize
     @options = []
     @used_short = []
     yield self
-  end
-
-  def banner(text)
-    @banner = text
   end
 
   def option(name, desc, setting = {})
@@ -34,7 +32,8 @@ class Parser
   def process!
     opts = {}
     optparser = OptionParser.new do |p|
-      p.banner = @banner
+      p.banner = @banner unless @banner.nil?
+      p.version = @version
       @options.each do |o|
         short = o.short || determine_short(o.name)
         @used_short << short
@@ -47,10 +46,9 @@ class Parser
           p.on("-" << short, "--" << o.name.to_s.gsub("_", "-") << " " << o.default.to_s, klass, o.desc) {|x| opts[o.name] = x}
         end
       end
-      p.on_tail("-h", "--help", "Show this message") do
-        puts p
-        exit
-      end
+      p.on_tail("-h", "--help", "Show this message") {puts p ; exit}
+      short = @used_short.include?("v") ? "-V" : "-v"
+      p.on_tail(short, "--version", "Print version") {puts @version ; exit} unless @version.nil?
     end
     begin
       optparser.parse!(ARGV)
@@ -63,7 +61,8 @@ class Parser
 end
 
 options = Parser.new do |p|
-  # p.banner "test"
+  # p.banner = "test"
+  p.version = "OptParseWrapper 0.8 (c) Florian Pilz 2011"
   p.option :severity, "set severity", :default => 4
   p.option :verbose, "enable verbose output"
   p.option :mutation, "set mutation", :default => "MightyMutation"

@@ -1,1 +1,112 @@
-micr-optparse page
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01//EN"
+    "http://www.w3.org/TR/html4/strict.dtd">
+<html>
+<head>
+    <meta http-equiv="Content-type" content="text/html; charset=utf-8">
+    <title>&micro;-optparse</title>
+    <style type="text/css"> 
+    body { width: 1024px; margin-left: auto; margin-right: auto; }
+    code { font-size: 14px; }
+    .ruby { background: #232323; color: #fff; padding: 1px; width: 1024px; }
+    
+    .ruby .comment { color: #bc9357 }
+    .ruby .symbol { color: #6d9cbd }
+    .ruby .var { color: #cfcfff }
+    
+    .ruby .boolean-operator { color: #cc7733 }
+    .ruby .keyword { color: #cc7733 }
+    .ruby .equal-sign { color: #cc7733 }
+    
+    .ruby .string { color: #a5c160 }
+    .ruby .regex { color: #a5c160 }
+    .ruby .number { color: #a5c160 }
+    .ruby .boolean { color: #a5c160 }
+    </style>
+</head>
+<body>
+    <h1>&micro;-optparse</h1>
+    <h2>Why another command line parser?</h2>
+    <p>
+        There are lots of command line parser out there, for example <a href="http://trollop.rubyforge.org/">trollop<a> is a great alternative.
+        However, it is 800 lines long.
+        In addition, trollop sucks at validating the input.
+        So &micro;-optparse is for you if you are looking for
+        <ul>
+            <li>a small command line parser to copy and paste it into your scripts to avoid injecting gem-dependencies</li>
+            <li>a command line parser with powerful validations</li>
+            <li>an easily usable, understandable and extendable command line parser</li>
+            <li>a wrapper around optparse, which intelligently fills out most informations on its own</li>
+        </ul>
+    </p>
+    
+    <h2>What is &micro;-optparse?</h2>
+    <p>
+        &micro;-optparse is a small wrapper around <a href="http://www.ruby-doc.org/stdlib/libdoc/optparse/rdoc/classes/OptionParser.html">optparse</a>, weighing <strong>less than 75 lines of code</strong>.
+        optparse (or OptionParser) on the other hand is a command line parser, which ships with ruby.
+        After you defined available options, it automatically creates a help page and is able to parse ARGV accordingly.
+        However, optparse requires you to repeat yourself quite often, which leads to many lines of code, just to configure the available options.
+        &micro;-optparse removes this obstacle by extracting the information contained in few lines of configuration.
+        In addition, &micro;-optparse extends optparse by some <strong>powerful validations</strong>, which where inspired by <a href="http://optiflag.rubyforge.org/quick.html">OptiFlag</a>.
+    </p>
+    
+    <h2>Talk in code!</h2>
+    <pre class="ruby"><code>
+        <span class="keyword">require</span> <span class="string">'rubygems'</span> <span class="comment"># necessary for ruby v1.8.*</span>
+        <span class="keyword">require</span> <span class="string">'micro-optparse'</span>
+        options <span class="equal-sign">=</span> Parser.<span class="keyword">new</span> <span class="keyword">do</span> |<span class="var">p</span>|
+        p.banner <span class="equal-sign">=</span> <span class="string">"This is a fancy script, for usage see below"</span>
+        p.version <span class="equal-sign">=</span> <span class="string">"fancy script 0.0 alpha"</span>
+        p.option <span class="symbol">:severity</span>, <span class="string">"set severity"</span>, <span class="symbol">:default</span> => <span class="number">4</span>, <span class="symbol">:value_in_set</span> => [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>]
+        p.option <span class="symbol">:verbose</span>, <span class="string">"enable verbose output"</span>
+        p.option <span class="symbol">:mutation</span>, <span class="string">"set mutation"</span>, <span class="symbol">:default</span> => <span class="string">"MightyMutation"</span>, <span class="symbol">:value_matches</span> => <span class="regex">/Mutation/</span>
+        p.option <span class="symbol">:plus_selection</span>, <span class="string">"use plus-selection if set"</span>, <span class="symbol">:default</span> => <span class="boolean">true</span>
+        p.option <span class="symbol">:selection</span>, <span class="string">"selection used"</span>, <span class="symbol">:default</span> => <span class="string">"BestSelection"</span>, <span class="symbol">:short</span> => <span class="string">"l"</span>
+        p.option <span class="symbol">:chance</span>, <span class="string">"set mutation chance"</span>, <span class="symbol">:default</span> => <span class="number">0.8</span>, <span class="symbol">:value_satisfies</span> => lambda {|<span class="var">x</span>| x <span class="boolean-operator">>=</span> <span class="number">0.0</span> <span class="boolean-operator">&&</span> x <span class="boolean-operator"><=</span> <span class="number">1.0</span>}
+        <span class="keyword">end</span>.process!
+    </code></pre>
+    <p>
+        What this piece of code does is the following:
+        <ul>
+            <li>it creates a help message and help options, with the banner above the options</li>
+            <li>it creates a version option, which displays the given text</li>
+            <li>it creates a long accessor for each option, according to the symbol - for example <span class="ruby"><code><span class="string">"--verbose"</span></code></span> for <span class="ruby"><code><span class="symbol">:verbose</span></code></span></li>
+            <li>it crease a short accessor, which is the first character of the long accessor (automatically resolves duplicates)</li>
+            <li>it checks if the class of the input and the default value match</li>
+            <li>it creates a switch, if no default value exist or the default value is <span class="ruby"><code><span class="boolean">true</span></code></span> or <span class="ruby"><code><span class="boolean">false</span></code></span></li>
+            <li>when value_in_set is given, it validates if the input value is in the given array</li>
+            <li>when value_matches is given, it validates if the input value matches the regular expression</li>
+            <li>when value_satisfies is given, it validates if the lamda or Proc evaluates to <span class="ruby"><code><span class="boolean">true</span></code></span>, when fed with the input value</li>
+            <li>it stores all parsed arguments and default values in the options hash, i.e. to access the value of <span class="ruby"><code><span class="symbol">:mutation</span></code></span> in your script, write <span class="ruby"><code>options[<span class="symbol">:mutation</span>]</code></span></li>
+        </ul>
+    </p>
+    <p>
+        The automatically generated help message looks like this:
+        <pre class="ruby"><code>
+            This is a fancy script, for usage see below
+                -s, --severity 4                 set severity
+                -v, --[no-]verbose               enable verbose output
+                -m, --mutation MightyMutation    set mutation
+                -p, --[no-]plus-selection        use plus-selection if set
+                -l, --selection BestSelection    selection used
+                -c, --chance 0.8                 set mutation chance
+                -h, --help                       Show this message
+                -V, --version                    Print version
+        </code></pre>
+    </p>
+    
+    <h2>Where do I get &micro;-optparse?</h2>
+    <p>
+        You can either go and install the gem via <span class="ruby"><code>gem install micro-optparse</code></span> or grab it from <a href="https://github.com/florianpilz/micro-optparse/blob/master/lib/micro-optparse/parser.rb">github</a> and paste it into your script.
+        If you choose the latter option, you may delete the <span class="ruby"><code>validate</code></span>-method to spare another 15 lines of code.
+    </p>
+    
+    <p>
+        If you want to contribute, you can fork the <a href="https://github.com/florianpilz/micro-optparse">github repository<a>, make your changes and send me a pull request.
+        However, improvements must be one of the following:
+        <ul>
+            <li>use fewer lines of code, without sacrificing readablity or functionality</li>
+            <li>enhance readablity or functionality, without increasing the lines of code</li>
+        </ul>
+    </p>
+</body>
+</html>

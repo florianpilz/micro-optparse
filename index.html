@@ -54,14 +54,14 @@
         <span class="keyword">require</span> <span class="string">'rubygems'</span> <span class="comment"># necessary for ruby v1.8.*</span>
         <span class="keyword">require</span> <span class="string">'micro-optparse'</span>
         options <span class="equal-sign">=</span> Parser.<span class="keyword">new</span> <span class="keyword">do</span> |<span class="var">p</span>|
-        p.banner <span class="equal-sign">=</span> <span class="string">"This is a fancy script, for usage see below"</span>
-        p.version <span class="equal-sign">=</span> <span class="string">"fancy script 0.0 alpha"</span>
-        p.option <span class="symbol">:severity</span>, <span class="string">"set severity"</span>, <span class="symbol">:default</span> => <span class="number">4</span>, <span class="symbol">:value_in_set</span> => [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>]
-        p.option <span class="symbol">:verbose</span>, <span class="string">"enable verbose output"</span>
-        p.option <span class="symbol">:mutation</span>, <span class="string">"set mutation"</span>, <span class="symbol">:default</span> => <span class="string">"MightyMutation"</span>, <span class="symbol">:value_matches</span> => <span class="regex">/Mutation/</span>
-        p.option <span class="symbol">:plus_selection</span>, <span class="string">"use plus-selection if set"</span>, <span class="symbol">:default</span> => <span class="boolean">true</span>
-        p.option <span class="symbol">:selection</span>, <span class="string">"selection used"</span>, <span class="symbol">:default</span> => <span class="string">"BestSelection"</span>, <span class="symbol">:short</span> => <span class="string">"l"</span>
-        p.option <span class="symbol">:chance</span>, <span class="string">"set mutation chance"</span>, <span class="symbol">:default</span> => <span class="number">0.8</span>, <span class="symbol">:value_satisfies</span> => lambda {|<span class="var">x</span>| x <span class="boolean-operator">>=</span> <span class="number">0.0</span> <span class="boolean-operator">&&</span> x <span class="boolean-operator"><=</span> <span class="number">1.0</span>}
+          p.banner <span class="equal-sign">=</span> <span class="string">"This is a fancy script, for usage see below"</span>
+          p.version <span class="equal-sign">=</span> <span class="string">"fancy script 0.0 alpha"</span>
+          p.option <span class="symbol">:severity</span>, <span class="string">"set severity"</span>, <span class="symbol">:default</span> =&gt; <span class="number">4</span>, <span class="symbol">:value_in_set</span> =&gt; [<span class="number">4</span>,<span class="number">5</span>,<span class="number">6</span>,<span class="number">7</span>,<span class="number">8</span>]
+          p.option <span class="symbol">:verbose</span>, <span class="string">"enable verbose output"</span>
+          p.option <span class="symbol">:mutation</span>, <span class="string">"set mutation"</span>, <span class="symbol">:default</span> =&gt; <span class="string">"MightyMutation"</span>, <span class="symbol">:value_matches</span> =&gt; <span class="regex">/Mutation/</span>
+          p.option <span class="symbol">:plus_selection</span>, <span class="string">"use plus-selection if set"</span>, <span class="symbol">:default</span> =&gt; <span class="boolean">true</span>
+          p.option <span class="symbol">:selection</span>, <span class="string">"selection used"</span>, <span class="symbol">:default</span> =&gt; <span class="string">"BestSelection"</span>, <span class="symbol">:short</span> =&gt; <span class="string">"l"</span>
+          p.option <span class="symbol">:chance</span>, <span class="string">"set mutation chance"</span>, <span class="symbol">:default</span> =&gt; <span class="number">0.8</span>, <span class="symbol">:value_satisfies</span> =&gt; lambda {|<span class="var">x</span>| x <span class="boolean-operator">>=</span> <span class="number">0.0</span> <span class="boolean-operator">&amp;&amp;</span> x <span class="boolean-operator">&lt;=</span> <span class="number">1.0</span>}
         <span class="keyword">end</span>.process!
     </code></pre>
     <p>

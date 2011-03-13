@@ -121,32 +121,32 @@ describe Parser do
 
     it "should display a warning if validation value_matches failed" do
       result = `ruby spec/programs/example.rb --mutation Bazinga`
-      result.strip.should == "Parameter must match /Mutation/"
+      result.strip.should == "Parameter for mutation must match /Mutation/"
     end
 
     it "should display a warning if validation value_satisfies failed" do
       result = `ruby spec/programs/example.rb --chance 300.21`
-      result.strip.should == "Parameter must satisfy given conditions (see description)"
+      result.strip.should == "Parameter for chance must satisfy given conditions (see description)"
     end
 
     it "should validate all given validations" do
       result = `ruby spec/programs/another_example.rb --eat-cake VanillaBrownie`
-      result.strip.should == "Parameter must match /Cake/"
+      result.strip.should == "Parameter for eat_cake must match /Cake/"
 
       result = `ruby spec/programs/another_example.rb --eat-cake 2VanillaCakes`
-      result.strip.should == "Parameter must satisfy given conditions (see description)"
+      result.strip.should == "Parameter for eat_cake must satisfy given conditions (see description)"
     end
   end
 
   describe "automatic assignment of default accessors" do
     it "should assign a different character for the short accessor if the first / second / ... is already taken" do
       result = `ruby spec/programs/another_example.rb --help`
-      result.should include("-e, --eat-cake")
+      result.should include("--eat-cake")
       result.should include("-a, --eat-salad")
       result.should include("-t, --eat-bagel")
-      result.should include("-n, --[no]-eat-nothing")
+      result.should include("-n, --[no-]eat-nothing")
       result.should include("-m, --eat-marshmellow")
-      result.should include("--eat-me")
+      result.should include("-e, --eat-me")
     end
   end
 end

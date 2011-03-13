@@ -16,7 +16,7 @@ class Parser
 
   def short_from(name)
     name.to_s.chars.each do |c|
-      next if @used_short.include?(c)
+      next if @used_short.include?(c) || c == "_"
       return c # returns from short_from method
     end
   end
@@ -24,15 +24,15 @@ class Parser
   def validate(options) # remove this method if you want fewer lines of code and don't need validations
     options.each_pair do |key, value|
       opt = nil
-      @options.each { |o| opt = o if o[0] == key }
+      @options.each { |o| opt = o if o[0] == key } # TODO there must be a better way ...
       unless opt[2][:value_in_set].nil? || opt[2][:value_in_set].include?(value)
-        puts "Parameter for " << key.to_s << " must be in [" << opt[2][:value_in_set].join(",") << "]" ; exit(1)
+        puts "Parameter for #{key} must be in [" << opt[2][:value_in_set].join(",") << "]" ; exit(1)
       end
       unless opt[2][:value_matches].nil? || opt[2][:value_matches] =~ value
-        puts "Parameter must match /" << opt[2][:value_matches].source << "/" ; exit(1)
+        puts "Parameter for #{key} must match /" << opt[2][:value_matches].source << "/" ; exit(1)
       end
       unless opt[2][:value_satisfies].nil? || opt[2][:value_satisfies].call(value)
-        puts "Parameter must satisfy given conditions (see description)" ; exit(1)
+        puts "Parameter for #{key} must satisfy given conditions (see description)" ; exit(1)
       end
     end
   end
@@ -45,7 +45,7 @@ class Parser
         options[o[0]] = o[2][:default] || false # set default
         klass = o[2][:default].class == Fixnum ? Integer : o[2][:default].class
 
-        if klass == TrueClass || klass == FalseClass || klass == NilClass # boolean switch
+        if [TrueClass, FalseClass, NilClass].include?(klass) # boolean switch
           p.on("-" << short, "--[no-]" << o[0].to_s.gsub("_", "-"), o[1]) {|x| options[o[0]] = x}
         else # argument with parameter
           p.on("-" << short, "--" << o[0].to_s.gsub("_", "-") << " " << o[2][:default].to_s, klass, o[1]) {|x| options[o[0]] = x}

@@ -27,6 +27,7 @@ describe Parser do
       result = `ruby spec/programs/example.rb`
       result.should include(":severity => 4")
       result.should include(":verbose => false")
+      result.should include(":mutation => MightyMutation")
       result.should include(":plus_selection => true")
       result.should include(":selection => BestSelection")
       result.should include(":chance => 0.8")

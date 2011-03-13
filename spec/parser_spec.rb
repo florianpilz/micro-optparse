@@ -76,5 +76,20 @@ describe Parser do
       result = `ruby spec/programs/example.rb --se 5`
       result.strip.should == "ambiguous option: --se"
     end
+    
+    it "should display a warning if validation value_in_set failed" do
+      result = `ruby spec/programs/example.rb --severity 1`
+      result.strip.should == "Parameter for severity must be in [4,5,6,7,8]"
+    end
+    
+    it "should display a warning if validation value_matches failed" do
+      result = `ruby spec/programs/example.rb --mutation Bazinga`
+      result.strip.should == "Parameter must match /Mutation/"
+    end
+    
+    it "should display a warning if validation value_satisfies failed" do
+      result = `ruby spec/programs/example.rb --chance 300.21`
+      result.strip.should == "Parameter must satisfy given conditions (see description)"
+    end
   end
 end

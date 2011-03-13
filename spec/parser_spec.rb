@@ -56,5 +56,25 @@ describe Parser do
       result.should include(":selection => WorstSelection")
       result.should include(":chance => 0.1")
     end
+    
+    it "should display a warning if an argument was invalid" do
+      result = `ruby spec/programs/example.rb --free-beer`
+      result.strip.should == "invalid option: --free-beer"
+    end
+    
+    it "should display a warning if another argument is needed" do
+      result = `ruby spec/programs/example.rb --mutation`
+      result.strip.should == "missing argument: --mutation"
+    end
+    
+    it "should display a warning if an argument of the wrong type was given" do
+      result = `ruby spec/programs/example.rb --severity OMFG!!!`
+      result.strip.should == "invalid argument: --severity OMFG!!!"
+    end
+    
+    it "should display a warning if autocompletion of an argument was ambiguous" do
+      result = `ruby spec/programs/example.rb --se 5`
+      result.strip.should == "ambiguous option: --se"
+    end
   end
 end

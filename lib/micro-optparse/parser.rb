@@ -23,8 +23,7 @@ class Parser
 
   def validate(options) # remove this method if you want fewer lines of code and don't need validations
     options.each_pair do |key, value|
-      opt = nil
-      @options.each { |o| opt = o if o[0] == key } # TODO there must be a better way ...
+      opt = @options.find_all{ |o| o[0] == key }.first
       unless opt[2][:value_in_set].nil? || opt[2][:value_in_set].include?(value)
         puts "Parameter for #{key} must be in [" << opt[2][:value_in_set].join(",") << "]" ; exit(1)
       end

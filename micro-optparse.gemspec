@@ -10,7 +10,7 @@ Gem::Specification.new do |s|
   s.email       = ["fpilz87@googlemail.com"]
   s.homepage    = "http://florianpilz.github.com/micro-optparse/"
   s.summary     = %q{A very small wrapper around optparse.}
-  s.description = %q{This gem wraps all the functionality of optparse into an easy to use, clear and short syntax. In addtion, strong validations are added. You can either use this gem as a lightweight alternative to trollop or copy all its 75 lines into your script to have an command-line parser without injecting a gem dependency.}
+  s.description = %q{This gem wraps all the functionality of optparse into an easy to use, clear and short syntax. In addtion, strong validations are added. You can either use this gem as a lightweight alternative to trollop or copy all its 75 lines into your script to have a command-line parser without injecting a gem dependency.}
 
   s.license = "MIT"
 

@@ -32,5 +32,29 @@ describe Parser do
       result.should include(":selection => BestSelection")
       result.should include(":chance => 0.8")
     end
+    
+    it "should display overwritten values accordingly when long option names were used" do
+      args = "--severity 5 --verbose --mutation DumbMutation \
+              --no-plus-selection --selection WorstSelection --chance 0.1"
+      result = `ruby spec/programs/example.rb #{args}`
+      result.should include(":severity => 5")
+      result.should include(":verbose => true")
+      result.should include(":mutation => DumbMutation")
+      result.should include(":plus_selection => false")
+      result.should include(":selection => WorstSelection")
+      result.should include(":chance => 0.1")
+    end
+    
+    it "should display overwritten values accordingly when short option names were used" do
+      # there is no short form to set switches to false
+      args = "-s 5 -v -m DumbMutation --no-plus-selection -l WorstSelection -c 0.1"
+      result = `ruby spec/programs/example.rb #{args}`
+      result.should include(":severity => 5")
+      result.should include(":verbose => true")
+      result.should include(":mutation => DumbMutation")
+      result.should include(":plus_selection => false")
+      result.should include(":selection => WorstSelection")
+      result.should include(":chance => 0.1")
+    end
   end
 end

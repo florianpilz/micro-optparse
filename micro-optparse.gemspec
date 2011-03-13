@@ -12,10 +12,12 @@ Gem::Specification.new do |s|
   s.summary     = %q{A very small wrapper around optparse.}
   s.description = %q{This gem wraps all the functionality of optparse into an easy to use, clear and short syntax. In addtion, strong validations are added. You can either use this gem as a lightweight alternative to trollop or copy all its 75 lines into your script to have a command-line parser without injecting a gem dependency.}
 
-  s.license = "MIT"
-
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")
   s.executables   = `git ls-files -- bin/*`.split("\n").map{ |f| File.basename(f) }
   s.require_paths = ["lib"]
+  
+  s.license = "MIT"
+  s.has_rdoc = false
+  s.add_development_dependency("rspec")
 end

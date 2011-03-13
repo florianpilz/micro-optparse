@@ -116,25 +116,25 @@ describe Parser do
   describe "warnings if validation failed" do
     it "should display a warning if validation value_in_set failed" do
       result = `ruby spec/programs/example.rb --severity 1`
-      result.strip.should == "Parameter for severity must be in [4,5,6,7,8]"
+      result.strip.should == "Parameter for --severity must be in [4,5,6,7,8]"
     end
 
     it "should display a warning if validation value_matches failed" do
       result = `ruby spec/programs/example.rb --mutation Bazinga`
-      result.strip.should == "Parameter for mutation must match /Mutation/"
+      result.strip.should == "Parameter for --mutation must match /Mutation/"
     end
 
     it "should display a warning if validation value_satisfies failed" do
       result = `ruby spec/programs/example.rb --chance 300.21`
-      result.strip.should == "Parameter for chance must satisfy given conditions (see description)"
+      result.strip.should == "Parameter for --chance must satisfy given conditions (see description)"
     end
 
     it "should validate all given validations" do
       result = `ruby spec/programs/another_example.rb --eat-cake VanillaBrownie`
-      result.strip.should == "Parameter for eat_cake must match /Cake/"
+      result.strip.should == "Parameter for --eat-cake must match /Cake/"
 
       result = `ruby spec/programs/another_example.rb --eat-cake 2VanillaCakes`
-      result.strip.should == "Parameter for eat_cake must satisfy given conditions (see description)"
+      result.strip.should == "Parameter for --eat-cake must satisfy given conditions (see description)"
     end
   end
 

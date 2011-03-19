@@ -26,7 +26,7 @@ class Parser
       opt = @options.find_all{ |o| o[0] == key }.first
       key = "--" << key.to_s.gsub("_", "-")
       unless opt[2][:value_in_set].nil? || opt[2][:value_in_set].include?(value)
-        puts "Parameter for #{key} must be in [" << opt[2][:value_in_set].join(",") << "]" ; exit(1)
+        puts "Parameter for #{key} must be in [" << opt[2][:value_in_set].join(", ") << "]" ; exit(1)
       end
       unless opt[2][:value_matches].nil? || opt[2][:value_matches] =~ value
         puts "Parameter for #{key} must match /" << opt[2][:value_matches].source << "/" ; exit(1)

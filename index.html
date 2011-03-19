@@ -28,20 +28,20 @@
     <h2>Why another command line parser?</h2>
     <p>
         There are lots of command line parser out there, for example <a href="http://trollop.rubyforge.org/">trollop<a> is a great alternative.
-        However, it is 800 lines long.
+        However, it's 800 lines long.
         In addition, trollop sucks at validating the input.
         So &micro;-optparse is for you if you are looking for
         <ul>
             <li>a small command line parser to copy and paste it into your scripts to avoid injecting gem-dependencies</li>
             <li>a command line parser with powerful validations</li>
             <li>an easily usable, understandable and extendable command line parser</li>
-            <li>a wrapper around optparse, which intelligently fills out most informations on its own</li>
+            <li>a wrapper around optparse, which intelligently fills out most information on its own</li>
         </ul>
     </p>
     
     <h2>What is &micro;-optparse?</h2>
     <p>
-        &micro;-optparse is a small wrapper around <a href="http://www.ruby-doc.org/stdlib/libdoc/optparse/rdoc/classes/OptionParser.html">optparse</a>, weighing <strong>less than 75 lines of code</strong>.
+        &micro;-optparse is a small wrapper around <a href="http://www.ruby-doc.org/stdlib/libdoc/optparse/rdoc/classes/OptionParser.html">optparse</a>, weighting <strong>less than 75 lines of code</strong>.
         optparse (or OptionParser) on the other hand is a command line parser, which ships with ruby.
         After you defined available options, it automatically creates a help page and is able to parse ARGV accordingly.
         However, optparse requires you to repeat yourself quite often, which leads to many lines of code, just to configure the available options.
@@ -49,7 +49,7 @@
         In addition, &micro;-optparse extends optparse by some <strong>powerful validations</strong>, which where inspired by <a href="http://optiflag.rubyforge.org/quick.html">OptiFlag</a>.
     </p>
     
-    <h2>Talk in code!</h2>
+    <h2>Talk code!</h2>
     <pre class="ruby"><code>
         <span class="keyword">require</span> <span class="string">'rubygems'</span> <span class="comment"># necessary for ruby v1.8.*</span>
         <span class="keyword">require</span> <span class="string">'micro-optparse'</span>

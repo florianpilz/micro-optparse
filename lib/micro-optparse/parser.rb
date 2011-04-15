@@ -4,7 +4,8 @@ require 'optparse'
 class Parser
   attr_accessor :banner, :version
 
-  def initialize
+  def initialize(argv = ARGV)
+    @argv = argv
     @options = []
     @used_short = []
     yield self
@@ -59,7 +60,7 @@ class Parser
     end
 
     begin
-      optionparser.parse!(ARGV)
+      optionparser.parse!(@argv)
     rescue OptionParser::ParseError => e
       puts e.message ; exit(1)
     end

@@ -4,11 +4,10 @@ require 'optparse'
 class Parser
   attr_accessor :banner, :version
 
-  def initialize(argv = ARGV)
-    @argv = argv
+  def initialize
     @options = []
     @used_short = []
-    yield self
+    yield self if block_given?
   end
 
   def option(name, desc, settings = {})
@@ -38,18 +37,18 @@ class Parser
     end
   end
 
-  def process!
-    options = {}
-    optionparser = OptionParser.new do |p|
+  def process!(arguments = ARGV)
+    @result = (@default_values || {}).clone # reset or new
+    @optionparser ||= OptionParser.new do |p| # prepare only once
       @options.each do |o|
         @used_short << short = o[2][:short] || short_from(o[0])
-        options[o[0]] = o[2][:default] || false # set default
+        @result[o[0]] = o[2][:default] || false # set default
         klass = o[2][:default].class == Fixnum ? Integer : o[2][:default].class
 
         if [TrueClass, FalseClass, NilClass].include?(klass) # boolean switch
-          p.on("-" << short, "--[no-]" << o[0].to_s.gsub("_", "-"), o[1]) {|x| options[o[0]] = x}
+          p.on("-" << short, "--[no-]" << o[0].to_s.gsub("_", "-"), o[1]) {|x| @result[o[0]] = x}
         else # argument with parameter
-          p.on("-" << short, "--" << o[0].to_s.gsub("_", "-") << " " << o[2][:default].to_s, klass, o[1]) {|x| options[o[0]] = x}
+          p.on("-" << short, "--" << o[0].to_s.gsub("_", "-") << " " << o[2][:default].to_s, klass, o[1]) {|x| @result[o[0]] = x}
         end
       end
 
@@ -57,15 +56,16 @@ class Parser
       p.on_tail("-h", "--help", "Show this message") {puts p ; exit}
       short = @used_short.include?("v") ? "-V" : "-v"
       p.on_tail(short, "--version", "Print version") {puts @version ; exit} unless @version.nil?
+      @default_values = @result.clone # save default values to reset @result in subsequent calls
     end
 
     begin
-      optionparser.parse!(@argv)
+      @optionparser.parse!(arguments)
     rescue OptionParser::ParseError => e
       puts e.message ; exit(1)
     end
-
-    validate(options) if self.respond_to?("validate")
-    options
+    
+    validate(@result) if self.respond_to?("validate")
+    @result
   end
 end

@@ -65,13 +65,28 @@ The automatically generated help message looks like this:
         -h, --help                       Show this message
         -V, --version                    Print version
 
+It doesn't stop at the command line!
+------------------------------------
+
+&micro;-optparse can parse any array which is formatted like ARGV, e.g. `["--severity", "4"]` is the same as typing `"--severity 4"` behind your program call.
+You can even process several arrays with the same parser (see example below).
+In addition, you don't need to specify all options at once, i.e. you can pass the parser around and add more options until you call the `process!`-method.
+
+    require 'rubygems' # necessary for ruby v1.8.*
+    require 'micro-optparse'
+    
+    parser = Parser.new
+    parser.option :eat_snickers, "How many?", :default => 0
+    options1 = parser.process!(["--eat-snickers", "2"])
+    options2 = parser.process!(["--eat-snickers", "1"])
+
 Where do I get &micro;-optparse?
 --------------------------
 
-You can either go and install the gem via `gem install micro-optparse` or grab it from [github](https://github.com/florianpilz/micro-optparse/blob/master/lib/micro-optparse/parser.rb) and paste it into your script.
+You can either go and install the gem via `gem install micro-optparse` or grab it from [this repository](https://github.com/florianpilz/micro-optparse/blob/master/lib/micro-optparse/parser.rb) and paste it into your script.
 If you choose the latter option, you may delete the `validate`-method to spare another 15 lines of code.
 
-If you want to contribute, you can fork the [github repository](https://github.com/florianpilz/micro-optparse), make your changes and send me a pull request.
+If you want to contribute, you can fork this repository, make your changes and send me a pull request.
 However, improvements must be one of the following:
 
 * use fewer lines of code, without sacrificing readablity or functionality

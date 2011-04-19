@@ -37,7 +37,7 @@ class Parser
     end
   end
 
-  def process!
+  def process!(arguments = ARGV)
     options = {}
     optionparser = OptionParser.new do |p|
       @options.each do |o|
@@ -59,7 +59,7 @@ class Parser
     end
 
     begin
-      optionparser.parse!(ARGV)
+      optionparser.parse!(arguments)
     rescue OptionParser::ParseError => e
       puts e.message ; exit(1)
     end

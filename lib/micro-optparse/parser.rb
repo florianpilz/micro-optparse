@@ -7,7 +7,7 @@ class Parser
   def initialize
     @options = []
     @used_short = []
-    yield self
+    yield self if block_given?
   end
 
   def option(name, desc, settings = {})

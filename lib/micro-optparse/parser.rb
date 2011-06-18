@@ -6,6 +6,7 @@ class Parser
   def initialize
     @options = []
     @used_short = []
+    @default_values = nil
     yield self if block_given?
   end
 

@@ -2,7 +2,6 @@ require 'optparse'
 
 class Parser
   attr_accessor :banner, :version
-  
   def initialize
     @options = []
     @used_short = []

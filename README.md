@@ -121,7 +121,4 @@ For example if you want to accept multiple file names with whitespaces in them:
     end.process!
     
     p options[:filenames]
-&nbsp;
-
-    ruby testscript.rb --filenames 'todo.txt,my great adventures.txt'
-    => ["todo.txt", "my great adventures.txt"]
+`ruby testscript.rb --filenames 'todo.txt,my great adventures.txt'` yields `["todo.txt", "my great adventures.txt"]`.

@@ -105,16 +105,16 @@
     
     <h2>Frequently Asked Questions</h2>
     <h3>All my argument values are either true or false - what's wrong?</h3>
-    <p>You must define default values, if the option should accept an argument. Every option without a default value (or with <span class="ruby"><code>true</code></span> or <span class="ruby"><code>false</code></span> as default) is treated as a switch: true if given and false / default otherwise.</p>
+    <p>You must define default values, if the option should accept an argument. Every option without a default value (or with <span class="ruby"><code><span class="boolean">true</span></code></span> or <span class="ruby"><code><span class="boolean">false</span></code></span> as default) is treated as a switch: <span class="ruby"><code><span class="boolean">true</span></code></span> if given and <span class="ruby"><code><span class="boolean">false</span></code></span> / default otherwise.</p>
 
     <h3>Is it possible to define mandatory / required arguments, which must be provided?</h3>
     <p>No it's not. It should be possible in any case to provide a reasonable default value. If you come across a case where it's not possible, feel free to contact me.</p>
 
     <h3>Are long arguments with spaces and other special characters allowed?</h3>
-    <p>Yes, just define an option which takes a <span class="ruby"><code>String</code></span> as an argument, i.e. pass a string as the default value for that option. Now everything between quotes will be parsed as the value for that argument, e.g. <span class="ruby"><code>ruby testscript.rb --selection 'I want the best selection you have!!! And if possible, add Donuts.'</code></span> Note that double quotes may cause trouble, for example I get an error if I use an exclamation mark in double quotes, but no error in single quotes.</p>
+    <p>Yes, just define an option which takes a <span class="ruby"><code><span class="keyword">String</span></code></span> as an argument, i.e. pass a string as the default value for that option. Now everything between quotes will be parsed as the value for that argument, e.g. <span class="ruby"><code>ruby testscript.rb --selection <span class="string">'I want the best selection you have!!! And if possible, add Donuts.'</span></code></span> Note that double quotes may cause trouble, for example I get an error if I use an exclamation mark in double quotes, but no error in single quotes.</p>
 
     <h3>Is it possible to define arguments which accept lists / arrays / multiple files / ... ?</h3>
-    <p>Yes, just define an option which takes an <span class="ruby"><code>Array</code></span> as an argument, i.e. pass an array as the default value for that option. The input will be split by comma. If the arguments contain spaces, wrap the whole thing in single quotes or double quotes.</p>
+    <p>Yes, just define an option which takes an <span class="ruby"><code><span class="keyword">Array</span></code></span> as an argument, i.e. pass an array as the default value for that option. The input will be split by comma. If the arguments contain spaces, wrap the whole thing in single quotes or double quotes.</p>
 
     <p>For example if you want to accept multiple file names with whitespaces in them:</p>
       <pre class="ruby"><code>
@@ -128,6 +128,6 @@
         p options[<span class="symbol">:filenames</span>]
       </code></pre>
       
-    <p><span class="ruby"><code>ruby testscript.rb --filenames 'todo.txt,my great adventures.txt'</code></span> yields <span class="ruby"><code>["todo.txt", "my great adventures.txt"]</code></span>.</p>
+    <p><span class="ruby"><code>ruby testscript.rb --filenames <span class="string">'todo.txt,my great adventures.txt'</span></code></span> yields <span class="ruby"><code>[<span class="string">"todo.txt"</span>, <span class="boolean">"my great adventures.txt"</span>]</code></span>.</p>
 </body>
 </html>

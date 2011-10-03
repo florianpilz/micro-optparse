@@ -27,17 +27,16 @@
     <h1>&micro;-optparse</h1>
     <h2>Why another command line parser?</h2>
     <p>
-        There are lots of command line parser out there, for example <a href="http://trollop.rubyforge.org/">trollop<a> is a great alternative.
+        There are lots of command line parser out there, for example <a href="http://trollop.rubyforge.org/">trollop</a> is a great alternative.
         However, it's 800 lines long.
         In addition, trollop sucks at validating the input.
-        So &micro;-optparse is for you if you are looking for
+        So &micro;-optparse is for you if you are looking for</p>
         <ul>
             <li>a small command line parser to copy and paste it into your scripts to avoid injecting gem-dependencies</li>
             <li>a command line parser with powerful validations</li>
             <li>an easily usable, understandable and extendable command line parser</li>
             <li>a wrapper around optparse, which intelligently fills out most information on its own</li>
         </ul>
-    </p>
     
     <h2>What is &micro;-optparse?</h2>
     <p>
@@ -64,8 +63,7 @@
           p.option <span class="symbol">:chance</span>, <span class="string">"set mutation chance"</span>, <span class="symbol">:default</span> =&gt; <span class="number">0.8</span>, <span class="symbol">:value_satisfies</span> =&gt; lambda {|<span class="var">x</span>| x <span class="boolean-operator">>=</span> <span class="number">0.0</span> <span class="boolean-operator">&amp;&amp;</span> x <span class="boolean-operator">&lt;=</span> <span class="number">1.0</span>}
         <span class="keyword">end</span>.process!
     </code></pre>
-    <p>
-        What this piece of code does is the following:
+    <p>What this piece of code does is the following:</p>
         <ul>
             <li>it creates a help message and help options, with the banner above the options</li>
             <li>it creates a version option, which displays the given text</li>
@@ -78,9 +76,7 @@
             <li>when value_satisfies is given, it validates if the lamda or Proc evaluates to <span class="ruby"><code><span class="boolean">true</span></code></span>, when fed with the input value</li>
             <li>it stores all parsed arguments and default values in the options hash, i.e. to access the value of <span class="ruby"><code><span class="symbol">:mutation</span></code></span> in your script, write <span class="ruby"><code>options[<span class="symbol">:mutation</span>]</code></span></li>
         </ul>
-    </p>
-    <p>
-        The automatically generated help message looks like this:
+    <p>The automatically generated help message looks like this:</p>
         <pre class="ruby"><code>
             This is a fancy script, for usage see below
                 -s, --severity 4                 set severity
@@ -92,7 +88,6 @@
                 -h, --help                       Show this message
                 -V, --version                    Print version
         </code></pre>
-    </p>
     
     <h2>Where do I get &micro;-optparse?</h2>
     <p>
@@ -101,12 +96,38 @@
     </p>
     
     <p>
-        If you want to contribute, you can fork the <a href="https://github.com/florianpilz/micro-optparse">github repository<a>, make your changes and send me a pull request.
-        However, improvements must be one of the following:
+        If you want to contribute, you can fork the <a href="https://github.com/florianpilz/micro-optparse">github repository</a>, make your changes and send me a pull request.
+        However, improvements must be one of the following:</p>
         <ul>
             <li>use fewer lines of code, without sacrificing readablity or functionality</li>
             <li>enhance readablity or functionality, without increasing the lines of code</li>
         </ul>
-    </p>
+    
+    <h2>Frequently Asked Questions</h2>
+    <h3>All my argument values are either true or false - what's wrong?</h3>
+    <p>You must define default values, if the option should accept an argument. Every option without a default value (or with <span class="ruby"><code>true</code></span> or <span class="ruby"><code>false</code></span> as default) is treated as a switch: true if given and false / default otherwise.</p>
+
+    <h3>Is it possible to define mandatory / required arguments, which must be provided?</h3>
+    <p>No it's not. It should be possible in any case to provide a reasonable default value. If you come across a case where it's not possible, feel free to contact me.</p>
+
+    <h3>Are long arguments with spaces and other special characters allowed?</h3>
+    <p>Yes, just define an option which takes a <span class="ruby"><code>String</code></span> as an argument, i.e. pass a string as the default value for that option. Now everything between quotes will be parsed as the value for that argument, e.g. <span class="ruby"><code>ruby testscript.rb --selection 'I want the best selection you have!!! And if possible, add Donuts.'</code></span> Note that double quotes may cause trouble, for example I get an error if I use an exclamation mark in double quotes, but no error in single quotes.</p>
+
+    <h3>Is it possible to define arguments which accept lists / arrays / multiple files / ... ?</h3>
+    <p>Yes, just define an option which takes an <span class="ruby"><code>Array</code></span> as an argument, i.e. pass an array as the default value for that option. The input will be split by comma. If the arguments contain spaces, wrap the whole thing in single quotes or double quotes.</p>
+
+    <p>For example if you want to accept multiple file names with whitespaces in them:</p>
+      <pre class="ruby"><code>
+        <span class="keyword">require</span> <span class="string">'rubygems'</span> <span class="comment"># necessary for ruby v1.8.*</span>
+        <span class="keyword">require</span> <span class="string">'micro-optparse'</span>
+
+        options <span class="equal-sign">=</span> Parser.<span class="keyword">new</span> <span class="keyword">do</span> |<span class="var">p</span>|
+          p.option <span class="symbol">:filenames</span>, <span class="string">"Files which will be processed"</span>, <span class="symbol">:default</span> =&gt; []
+        <span class="keyword">end</span>.process!
+
+        p options[<span class="symbol">:filenames</span>]
+      </code></pre>
+      
+    <p><span class="ruby"><code>ruby testscript.rb --filenames 'todo.txt,my great adventures.txt'</code></span> yields <span class="ruby"><code>["todo.txt", "my great adventures.txt"]</code></span>.</p>
 </body>
 </html>

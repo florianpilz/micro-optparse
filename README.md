@@ -91,3 +91,33 @@ However, improvements must be one of the following:
 
 * use fewer lines of code, without sacrificing readablity or functionality
 * enhance readablity or functionality, without increasing the lines of code
+
+Frequently Asked Questions
+--------------------------
+
+### All my argument values are either true or false - what's wrong?
+You must define default values, if the option should accept an argument. Every option without a default value (or with `true` or `false` as default) is treated as a switch: true if given and false / default otherwise.
+
+### Is it possible to define mandatory / required arguments, which must be provided?
+No it's not. It should be possible in any case to provide a reasonable default value. If you come across a case where it's not possible, feel free to contact me.
+
+### Are long arguments with spaces and other special characters allowed?
+Yes, just define an option which takes a `String` as an argument, i.e. pass a string as the default value for that option. Now everything between quotes will be parsed as the value for that argument, e.g. `ruby testscript.rb --selection 'I want the best selection you have!!! And if possible, add Donuts.'` Note that double quotes may cause trouble, for example I get an error if I use an exclamation mark in double quotes, but no error in single quotes.
+
+### Is it possible to define arguments which accept lists / arrays / multiple files / ... ?
+Yes, just define an option which takes an `Array` as an argument, i.e. pass an array as the default value for that option. The input will be split by comma. If the arguments contain spaces, wrap the whole thing in single quotes or double quotes.
+
+For example if you want to accept multiple file names with whitespaces in them:
+
+    require 'rubygems' # necessary for ruby v1.8.*
+    require 'micro-optparse'
+    
+    options = Parser.new do |p|
+      p.option :filenames, "Files which will be processed", :default => []
+    end.process!
+    
+    p options[:filenames]
+&nbsp;
+
+    ruby testscript.rb --filenames 'todo.txt,my great adventures.txt'
+    => ["todo.txt", "my great adventures.txt"]

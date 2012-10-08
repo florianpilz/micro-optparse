@@ -63,6 +63,7 @@ class Parser
         @optionparser.order!(arguments)
       else
         @optionparser.parse!(arguments)
+      end
     rescue OptionParser::ParseError => e
       puts e.message ; exit(1)
     end

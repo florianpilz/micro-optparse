@@ -36,7 +36,7 @@ class Parser
     end
   end
 
-  def process!(arguments = ARGV)
+  def process!(arguments = ARGV, opts = {})
     @result = (@default_values || {}).clone # reset or new
     @optionparser ||= OptionParser.new do |p| # prepare only once
       @options.each do |o|
@@ -59,7 +59,11 @@ class Parser
     end
 
     begin
-      @optionparser.parse!(arguments)
+      if opts[:eat]
+        @optionparser.order!(arguments)
+      else
+        @optionparser.parse!(arguments)
+      end
     rescue OptionParser::ParseError => e
       puts e.message ; exit(1)
     end

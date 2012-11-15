@@ -27,18 +27,21 @@ In addition, &micro;-optparse extends optparse by some **powerful validations**,
 Talk in code!
 -------------
 
-    require 'rubygems' # necessary for ruby v1.8.*
-    require 'micro-optparse'
-    options = Parser.new do |p|
-       p.banner = "This is a fancy script, for usage see below"
-       p.version = "fancy script 0.0 alpha"
-       p.option :severity, "set severity", :default => 4, :value_in_set => [4,5,6,7,8]
-       p.option :verbose, "enable verbose output"
-       p.option :mutation, "set mutation", :default => "MightyMutation", :value_matches => /Mutation/
-       p.option :plus_selection, "use plus-selection if set", :default => true
-       p.option :selection, "selection used", :default => "BestSelection", :short => "l"
-       p.option :chance, "set mutation chance", :default => 0.8, :value_satisfies => lambda {|x| x >= 0.0 && x <= 1.0}
-    end.process!
+```ruby
+require 'rubygems' # necessary for ruby v1.8.*
+require 'micro-optparse'
+
+options = Parser.new do |p|
+   p.banner = "This is a fancy script, for usage see below"
+   p.version = "fancy script 0.0 alpha"
+   p.option :severity, "set severity", :default => 4, :value_in_set => [4,5,6,7,8]
+   p.option :verbose, "enable verbose output"
+   p.option :mutation, "set mutation", :default => "MightyMutation", :value_matches => /Mutation/
+   p.option :plus_selection, "use plus-selection if set", :default => true
+   p.option :selection, "selection used", :default => "BestSelection", :short => "l"
+   p.option :chance, "set mutation chance", :default => 0.8, :value_satisfies => lambda {|x| x >= 0.0 && x <= 1.0}
+end.process!
+```
 
 What this piece of code does is the following:
 
@@ -72,13 +75,15 @@ It doesn't stop at the command line!
 You can even process several arrays with the same parser (see example below).
 In addition, you don't need to specify all options at once, i.e. you can pass the parser around and add more options until you call the `process!`-method.
 
-    require 'rubygems' # necessary for ruby v1.8.*
-    require 'micro-optparse'
-    
-    parser = Parser.new
-    parser.option :eat_snickers, "How many?", :default => 0
-    options1 = parser.process!(["--eat-snickers", "2"])
-    options2 = parser.process!(["--eat-snickers", "1"])
+```ruby
+require 'rubygems' # necessary for ruby v1.8.*
+require 'micro-optparse'
+
+parser = Parser.new
+parser.option :eat_snickers, "How many?", :default => 0
+options1 = parser.process!(["--eat-snickers", "2"])
+options2 = parser.process!(["--eat-snickers", "1"])
+```
 
 Where do I get &micro;-optparse?
 --------------------------
@@ -101,7 +106,23 @@ You must define default values, if the option should accept an argument. Every o
 
 Is it possible to define mandatory / required arguments, which must be provided?
 --------------------------------------------------------------------------------
-No it's not. It should be possible in any case to provide a reasonable default value. If you come across a case where it's not possible, feel free to contact me.
+No it's not. Every option that has no default argument is a switch and if an option has a default argument, well there is a default to fall back to. However, what you can do is using &micro;-optparse to parse all options and switches (which are then removed from the ARGV array) and use everything that remains in ARGV as the mandatory arguments. Of course you have to raise an error yourself if no argument is left.
+
+Consider the following example to implement mandatory arguments yourself:
+
+```ruby
+require 'rubygems' # necessary for ruby v1.8.*
+require 'micro-optparse'
+
+options = Parser.new do |p|
+  p.option :meal, "Choose Meal", :default => "CucumberSalad"
+end.parse!
+
+raise ArgumentError, "No files given!" unless ARGV.size > 0
+file = ARGV.shift
+```
+
+If this short file is saved as `script.rb`, a call could look like the following: `ruby script.rb --meal=BrainSandwich file1.txt file2.txt`.
 
 Are long arguments with spaces and other special characters allowed?
 --------------------------------------------------------------------
@@ -113,12 +134,15 @@ Yes, just define an option which takes an `Array` as an argument, i.e. pass an a
 
 For example if you want to accept multiple file names with whitespaces in them:
 
-    require 'rubygems' # necessary for ruby v1.8.*
-    require 'micro-optparse'
-    
-    options = Parser.new do |p|
-      p.option :filenames, "Files which will be processed", :default => []
-    end.process!
-    
-    p options[:filenames]
+```ruby
+require 'rubygems' # necessary for ruby v1.8.*
+require 'micro-optparse'
+
+options = Parser.new do |p|
+  p.option :filenames, "Files which will be processed", :default => []
+end.process!
+
+p options[:filenames]
+```
+
 `ruby testscript.rb --filenames 'todo.txt,my great adventures.txt'` yields `["todo.txt", "my great adventures.txt"]`.

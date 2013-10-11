@@ -6,6 +6,7 @@ describe Parser do
       p.option :severity, "set severity", :default => 4, :value_in_set => [4,5,6,7,8]
       p.option :verbose, "enable verbose output"
       p.option :mutation, "set mutation", :default => "MightyMutation", :value_matches => /Mutation/
+      p.option :allow_absence, "allow absence parameter", :default => nil, :value_matches => /anystring/
       p.option :plus_selection, "use plus-selection if set", :default => true
       p.option :selection, "selection used", :default => "BestSelection", :short => "l"
       p.option :chance, "set mutation chance", :default => 0.8, :value_satisfies => lambda {|x| x >= 0.0 && x <= 1.0}
@@ -59,6 +60,31 @@ describe Parser do
       result[:verbose].should == true
       result[:mutation].should == "DumbMutation"
       result[:plus_selection].should == false
+      result[:selection].should == "WorstSelection"
+      result[:chance].should == 0.1
+    end
+  end
+
+  describe "allowing omitting then option has nil value" do
+    it "should display overwritten values accordingly when :allow_absence argument is absent" do
+      args = ["--severity", "5", "--verbose", "--mutation", "DumbMutation",
+              "--no-plus-selection", "--selection", "WorstSelection", "--chance", "0.1"]
+      result = @evolutionary_algorithm_parser.process!(args)
+      result[:severity].should == 5
+      result[:verbose].should == true
+      result[:mutation].should == "DumbMutation"
+      result[:allow_absence].should == nil
+      result[:plus_selection].should == false
+      result[:selection].should == "WorstSelection"
+      result[:chance].should == 0.1
+    end
+
+    it "should display overwritten values accordingly when :allow_absence argument is present, and matches to /anystring/ regexp" do
+      args = ["--allow-absence=anystringany", "--mutation=DumbMutation",
+              "--selection=WorstSelection", "--chance=0.1"]
+      result = @evolutionary_algorithm_parser.process!(args)
+      result[:mutation].should == "DumbMutation"
+      result[:allow_absence].should == "anystringany"
       result[:selection].should == "WorstSelection"
       result[:chance].should == 0.1
     end
@@ -196,3 +222,4 @@ describe Parser do
     end
   end
 end
+

@@ -43,17 +43,22 @@ class Parser
     @result = (@default_values || {}).clone # reset or new
     @optionparser ||= OptionParser.new do |p| # prepare only once
       @options.each do |o|
-        @used_short << short = o[2][:short] || short_from(o[0])
+        @used_short << short = ( o[2][:short] == nil ) && short_from(o[0]) || o[2][:short]
         @result[o[0]] = o[2].key?(:default) ? o[2][:default] : false # set default
         klass = @result[o[0]].class == Fixnum ? Integer : @result[o[0]].class
 
+        args = []
+        args << ( "-" << short ) if short
         if [TrueClass, FalseClass].include?(klass) # boolean switch
-          p.on("-" << short, "--[no-]" << o[0].to_s.gsub("_", "-"), o[1]) {|x| @result[o[0]] = x}
+          args << ( "--[no-]" << o[0].to_s.gsub("_", "-") )
         else # argument with parameter
-          p.on("-" << short, "--" << o[0].to_s.gsub("_", "-") << " " << o[2][:default].to_s, klass, o[1]) {|x| @result[o[0]] = x}
+          args << ( "--" << o[0].to_s.gsub("_", "-") << " " << o[2][:default].to_s ) << klass
         end
+        args << o[1]
+        p.on(*args) {|x| @result[o[0]] = x }
       end
 
+      @used_short.select! {| s | s }
       p.banner = @banner unless @banner.nil?
       p.on_tail("-h", "--help", "Show this message") {puts p ; exit}
       short = @used_short.include?("v") ? "-V" : "-v"

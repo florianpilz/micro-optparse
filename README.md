@@ -37,6 +37,7 @@ options = Parser.new do |p|
    p.option :severity, "set severity", :default => 4, :value_in_set => [4,5,6,7,8]
    p.option :verbose, "enable verbose output"
    p.option :mutation, "set mutation", :default => "MightyMutation", :value_matches => /Mutation/
+   p.option :allow_absence, "allow absence parameter", :default => nil, :value_matches => /any string/
    p.option :plus_selection, "use plus-selection if set", :default => true
    p.option :selection, "selection used", :default => "BestSelection", :short => "l"
    p.option :chance, "set mutation chance", :default => 0.8, :value_satisfies => lambda {|x| x >= 0.0 && x <= 1.0}
@@ -51,6 +52,7 @@ What this piece of code does is the following:
 * it crease a short accessor, which is the first character of the long accessor (automatically resolves duplicates)
 * it checks if the class of the input and the default value match
 * it creates a switch, if no default value exist or the default value is `true` or `false`
+* it creates a free argument, still requiring a value, but could staying nil, if the default value is `nil`
 * when value\_in\_set is given, it validates if the input value is in the given array
 * when value_matches is given, it validates if the input value matches the regular expression
 * when value_satisfies is given, it validates if the lamda or Proc evaluates to `true`, when fed with the input value
@@ -62,6 +64,7 @@ The automatically generated help message looks like this:
         -s, --severity 4                 set severity
         -v, --[no-]verbose               enable verbose output
         -m, --mutation MightyMutation    set mutation
+        -a, --allow-absence              allow absence parameter
         -p, --[no-]plus-selection        use plus-selection if set
         -l, --selection BestSelection    selection used
         -c, --chance 0.8                 set mutation chance
@@ -146,3 +149,19 @@ p options[:filenames]
 ```
 
 `ruby testscript.rb --filenames 'todo.txt,my great adventures.txt'` yields `["todo.txt", "my great adventures.txt"]`.
+
+Can I create an argument that require a value, but when is absent, it will contain `nil` value?
+-----------------------------------------------------------------------------------------------
+Yes, you can. Just specify default value as `nil`, and when you smit the argument in the command line, it will be `nil`, when you specify it, it will pass all checks as defaulted as a string.
+
+```ruby
+require 'rubygems' if RUBY_VERSION < '1.9.0'
+require 'micro-optparse'
+
+options = Parser.new do |p|
+  p.option :logfile, "Logfile, to which log data will be stored", :default => nil, :value_matches => /^[a-z_]+$/
+end.process!
+
+p options[:logfile] # >> nil
+```
+

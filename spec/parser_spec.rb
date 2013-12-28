@@ -195,4 +195,20 @@ describe Parser do
       result.should include("-e, --eat-me")
     end
   end
+
+  describe "assigns short for every param" do
+    it "should use every short only once" do
+      result  = `ruby spec/programs/short.rb --help`
+      result.scan(/\s-a/).length.should == 1
+      result.scan(/\s-b/).length.should == 1
+      result.scan(/\s-c/).length.should == 1
+    end
+
+    it "should use first char as short if all have been used" do
+      result  = `ruby spec/programs/short.rb --help`
+      result.should include("-a, --acb")
+      result.should include("-b, --bac")
+      result.should include("-c, --cba")
+    end
+  end
 end

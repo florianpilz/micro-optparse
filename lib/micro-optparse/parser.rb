@@ -5,7 +5,7 @@ class Parser
   def initialize
     @options = []
     @used_short = []
-    @default_values = nil
+    @default_values = {}
     yield self if block_given?
   end
 
@@ -38,7 +38,7 @@ class Parser
   end
 
   def process!(arguments = ARGV)
-    @result = (@default_values || {}).clone # reset or new
+    @result = @default_values.clone # reset or new
     @optionparser ||= OptionParser.new do |p| # prepare only once
       @options.each do |o|
         @used_short << short = o[2][:short] || short_from(o[0])
@@ -56,8 +56,8 @@ class Parser
       p.on_tail("-h", "--help", "Show this message") {puts p ; exit}
       short = @used_short.include?("v") ? "-V" : "-v"
       p.on_tail(short, "--version", "Print version") {puts @version ; exit} unless @version.nil?
-      @default_values = @result.clone # save default values to reset @result in subsequent calls
     end
+    @default_values = @result.clone # save default values to reset @result in subsequent calls
 
     begin
       @optionparser.parse!(arguments)

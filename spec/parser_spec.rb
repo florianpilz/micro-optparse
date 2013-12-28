@@ -27,6 +27,15 @@ describe Parser do
       result[:selection].should == "BestSelection"
       result[:chance].should == 0.8
     end
+
+    it "should not return a default value if the argument is declared optional" do
+      parser = Parser.new do |p|
+        p.option :optarg, "optional argument", :optional => true
+      end
+      result = parser.process!()
+      result.has_key?(:optarg).should == false
+      result[:optarg].should == nil
+    end
   end
 
   describe "setting of custom values" do

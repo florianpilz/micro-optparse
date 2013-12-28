@@ -42,7 +42,7 @@ class Parser
     @optionparser ||= OptionParser.new do |p| # prepare only once
       @options.each do |o|
         @used_short << short = o[2][:short] || short_from(o[0])
-        @result[o[0]] = o[2][:default] || false # set default
+        @result[o[0]] = o[2][:default] || false unless o[2][:optional] # set default
         klass = o[2][:default].class == Fixnum ? Integer : o[2][:default].class
 
         if [TrueClass, FalseClass, NilClass].include?(klass) # boolean switch

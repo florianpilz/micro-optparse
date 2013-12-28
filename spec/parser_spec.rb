@@ -89,6 +89,29 @@ describe Parser do
       parser.class.should == Parser
     end
   end
+
+  describe "parsing of lists" do
+    it "should parse list of arguments separated by comma when given an array as default" do
+      parser = Parser.new do |p|
+        p.option :listarg, "List Argument", :default => []
+      end
+
+      input = ['--listarg', 'foo,bar,baz']
+      parser.process!(input)[:listarg].should == ['foo', 'bar', 'baz']
+    end
+
+    it "should allow multiple argument lists" do
+      parser = Parser.new do |p|
+        p.option :first_listarg, "List Argument", :default => []
+        p.option :second_listarg, "List Argument", :default => []
+      end
+
+      input = ['-f', 'foo,bar,baz', '-s', 'blah,blah,blah']
+      result = parser.process!(input)
+      result[:first_listarg].should == ['foo', 'bar', 'baz']
+      result[:second_listarg].should == ['blah', 'blah', 'blah']
+    end
+  end
   
   describe "help message" do
     it "should show help message when called with --help or -h" do

@@ -18,6 +18,7 @@ class Parser
       next if @used_short.include?(c) || c == "_"
       return c # returns from short_from method
     end
+    return name.to_s.chars.first
   end
 
   def validate(options) # remove this method if you want fewer lines of code and don't need validations

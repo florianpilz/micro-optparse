@@ -68,11 +68,22 @@ The automatically generated help message looks like this:
         -h, --help                       Show this message
         -V, --version                    Print version
 
-Some example calls and results:
+To show some example calls and results, I will use a simplified version of the Parser above:
 
-* `ruby myprogram.rb --help` will yield the above message
-* `ruby myprogram.rb` will fill the variable `options` with the hash `{:severity => 4, :verbose => false, :mutation => "MightyMutation", :plus_selection => true, ``:selection => "BestSelection", :chance => 0.8}` due to the given default values
-* `ruby myprogram.rb --severity 2 -m WeakMutation -c 0.5 --selection FooBar` will fill the variable `options` with the hash `{:severity => 2, :verbose => false, :mutation => "WeakMutation", :plus_selection => true, ``:selection => "FooBar", :chance => 0.5}`, since the given values overwrite default values
+```ruby
+require 'rubygems' # necessary for ruby v1.8.*
+require 'micro-optparse'
+
+options = Parser.new do |p|
+   p.option :severity, "set severity", :default => 4, :value_in_set => [4,5,6,7,8]
+   p.option :mutation, "set mutation", :default => "MightyMutation", :value_matches => /Mutation/
+   p.option :plus_selection, "use plus-selection if set", :default => true, :optional => true
+end.process!
+```
+
+* `ruby myprogram.rb --help` will yield a help message formatted like the one above
+* `ruby myprogram.rb` will fill the variable `options` with the hash `{:severity => 4, :mutation => "MightyMutation"}` due to the given default values (`:plus_selection` does not appear in the result, due to the `:optional => true` setting, but can still be filled by the user)
+* `ruby myprogram.rb -s 2 --mutation WeakMutation -p true` will fill the variable `options` with the hash `{:severity => 2, :mutation => "WeakMutation", :plus_selection => true}`, since the given values overwrite default values
 
 
 It doesn't stop at the command line!

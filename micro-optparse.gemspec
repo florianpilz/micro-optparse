@@ -9,8 +9,8 @@ Gem::Specification.new do |s|
   s.authors     = ["Florian Pilz"]
   s.email       = ["fpilz87@googlemail.com"]
   s.homepage    = "http://florianpilz.github.com/micro-optparse/"
-  s.summary     = %q{An option parser which is 70 lines short.}
-  s.description = %q{This option parser is 70 lines short and is based on OptionParser. It has strong validations and a short, clear and easy to use syntax. Feel free to copy all 70 lines (45 lines without validations / empty lines) into your script rather installing the gem.}
+  s.summary     = %q{An lightweight option parser, which is 80 lines short.}
+  s.description = %q{This is an lightweight option parser, which is less than 80 lines short. It has strong validations and a short, clear and easy to use syntax. Feel free to copy all 80 lines (55 lines without validations / empty lines) into your script rather installing the gem.}
   
   s.files         = `git ls-files`.split("\n")
   s.test_files    = `git ls-files -- {test,spec,features}/*`.split("\n")

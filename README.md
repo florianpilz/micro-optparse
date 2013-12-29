@@ -164,3 +164,24 @@ p options[:filenames]
 ```
 
 `ruby testscript.rb --filenames 'todo.txt,my great adventures.txt'` yields `["todo.txt", "my great adventures.txt"]`.
+
+Is it possible define an option without a default value?
+--------------------------------------------------------
+
+Yes and No. The literal answer to this question is "No", since a default value must be given for all arguments, except switches which default to `false`. However, what you are probably trying to achieve is to define an option which does only show up in the resulting hash, if the argument was given by the user. *This is actually possible!* Just add `:optional => true` to the line where you define your option and you are ready to go! The default value is still used for type checking.
+
+```ruby
+require 'rubygems' # necessary for ruby v1.8.*
+require 'micro-optparse'
+
+options = Parser.new do |p|
+  p.option :file, "File to process (optional)", :default => "String", :optional => true
+end.process!
+
+puts options
+```
+
+Example usage of this parser:
+
+* `ruby myprogram.rb` will yield `{}`
+* `ruby myprogram.rb --file testfile.txt` will yield `{:file => "testfile.txt"}`

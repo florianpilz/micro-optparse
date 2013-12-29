@@ -43,13 +43,16 @@ class Parser
       @options.each do |o|
         @used_short << short = o[2][:short] || short_from(o[0])
         @result[o[0]] = o[2][:default] || false unless o[2][:optional] # set default
+        name = o[0].to_s.gsub("_", "-")
         klass = o[2][:default].class == Fixnum ? Integer : o[2][:default].class
 
+        args = [] << "-" + short << o[1]
         if [TrueClass, FalseClass, NilClass].include?(klass) # boolean switch
-          p.on("-" << short, "--[no-]" << o[0].to_s.gsub("_", "-"), o[1]) {|x| @result[o[0]] = x}
-        else # argument with parameter
-          p.on("-" << short, "--" << o[0].to_s.gsub("_", "-") << " " << o[2][:default].to_s, klass, o[1]) {|x| @result[o[0]] = x}
+          args << "--[no-]" + name
+        else # argument with parameter, add class for typecheck
+          args << "--" + name + " " + o[2][:default].to_s << klass
         end
+        p.on(*args) {|x| @result[o[0]] = x}
       end
 
       p.banner = @banner unless @banner.nil?

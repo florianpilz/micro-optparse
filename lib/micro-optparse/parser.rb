@@ -2,14 +2,16 @@ require 'optparse'
 
 class Parser
   attr_accessor :banner, :version
-  def initialize
+  def initialize(default_settings = {})
     @options = []
     @used_short = []
     @default_values = {}
+    @default_settings = default_settings
     yield self if block_given?
   end
 
   def option(name, desc, settings = {})
+    settings = @default_settings.clone.merge(settings)
     @options << {:name => name, :description => desc, :settings => settings}
   end
 

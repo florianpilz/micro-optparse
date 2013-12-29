@@ -17,7 +17,7 @@ So &micro;-optparse is for you if you are looking for
 What is &micro;-optparse?
 -------------------
 
-&micro;-optparse is a small wrapper around [optparse](http://www.ruby-doc.org/stdlib/libdoc/optparse/rdoc/classes/OptionParser.html), weighing **less than 75 lines of code**.
+&micro;-optparse is a small wrapper around [optparse](http://www.ruby-doc.org/stdlib/libdoc/optparse/rdoc/classes/OptionParser.html), weighing **less than 80 lines of code**.
 optparse (or OptionParser) on the other hand is a command line parser, which ships with ruby.
 After you defined available options, it automatically creates a help page and is able to parse ARGV accordingly.
 However, optparse requires you to repeat yourself quite often, which leads to many lines of code, just to configure the available options.

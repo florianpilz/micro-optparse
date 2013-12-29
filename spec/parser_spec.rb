@@ -121,6 +121,29 @@ describe Parser do
       result[:second_listarg].should == ['blah', 'blah', 'blah']
     end
   end
+
+  describe "default settings" do
+    it "should set default settings on all options" do
+      parser = Parser.new(:optional => true) do |p|
+        p.option :foo, "foo argument"
+        p.option :bar, "bar argument"
+      end
+
+      result = parser.process!([])
+      result.length.should == 0 # all optional
+    end
+
+    it "should allow to overwrite default settings" do
+      parser = Parser.new(:default => "Bar") do |p|
+        p.option :foo, "foo argument", :default => "Foo"
+        p.option :bar, "bar argument"
+      end
+
+      result = parser.process!([])
+      result[:foo].should == "Foo"
+      result[:bar].should == "Bar"
+    end
+  end
   
   describe "help message" do
     it "should show help message when called with --help or -h" do

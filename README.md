@@ -71,8 +71,8 @@ The automatically generated help message looks like this:
 Some example calls and results:
 
 * `ruby myprogram.rb --help` will yield the above message
-* `ruby myprogram.rb` will fill the variable `options` with the hash `{:severity => 4, :verbose => false, :mutation => "MightyMutation", :plus_selection => true, :selection => "BestSelection", :chance => 0.8}` due to the given default values
-* `ruby myprogram.rb --severity 2 -m WeakMutation -c 0.5 --selection FooBar` will fill the variable `options` with the hash `{:severity => 2, :verbose => false, :mutation => "WeakMutation", :plus_selection => true, :selection => "FooBar", :chance => 0.5}`, since the given values overwrite default values
+* `ruby myprogram.rb` will fill the variable `options` with the hash `{:severity => 4, :verbose => false, :mutation => "MightyMutation", :plus_selection => true, ``:selection => "BestSelection", :chance => 0.8}` due to the given default values
+* `ruby myprogram.rb --severity 2 -m WeakMutation -c 0.5 --selection FooBar` will fill the variable `options` with the hash `{:severity => 2, :verbose => false, :mutation => "WeakMutation", :plus_selection => true, ``:selection => "FooBar", :chance => 0.5}`, since the given values overwrite default values
 
 
 It doesn't stop at the command line!

@@ -10,7 +10,7 @@ class Parser
   end
 
   def option(name, desc, settings = {})
-    @options << [name, desc, settings]
+    @options << {:name => name, :description => desc, :settings => settings}
   end
 
   def short_from(name)
@@ -21,17 +21,17 @@ class Parser
     return name.to_s.chars.first
   end
 
-  def validate(options) # remove this method if you want fewer lines of code and don't need validations
-    options.each_pair do |key, value|
-      opt = @options.find_all{ |o| o[0] == key }.first
+  def validate(result) # remove this method if you want fewer lines of code and don't need validations
+    result.each_pair do |key, value|
+      o = @options.find_all{ |option| option[:name] == key }.first
       key = "--" << key.to_s.gsub("_", "-")
-      unless opt[2][:value_in_set].nil? || opt[2][:value_in_set].include?(value)
-        puts "Parameter for #{key} must be in [" << opt[2][:value_in_set].join(", ") << "]" ; exit(1)
+      unless o[:settings][:value_in_set].nil? || o[:settings][:value_in_set].include?(value)
+        puts "Parameter for #{key} must be in [" << o[:settings][:value_in_set].join(", ") << "]" ; exit(1)
       end
-      unless opt[2][:value_matches].nil? || opt[2][:value_matches] =~ value
-        puts "Parameter for #{key} must match /" << opt[2][:value_matches].source << "/" ; exit(1)
+      unless o[:settings][:value_matches].nil? || o[:settings][:value_matches] =~ value
+        puts "Parameter for #{key} must match /" << o[:settings][:value_matches].source << "/" ; exit(1)
       end
-      unless opt[2][:value_satisfies].nil? || opt[2][:value_satisfies].call(value)
+      unless o[:settings][:value_satisfies].nil? || o[:settings][:value_satisfies].call(value)
         puts "Parameter for #{key} must satisfy given conditions (see description)" ; exit(1)
       end
     end
@@ -41,18 +41,18 @@ class Parser
     @result = @default_values.clone # reset or new
     @optionparser ||= OptionParser.new do |p| # prepare only once
       @options.each do |o|
-        @used_short << short = o[2][:short] || short_from(o[0])
-        @result[o[0]] = o[2][:default] || false unless o[2][:optional] # set default
-        name = o[0].to_s.gsub("_", "-")
-        klass = o[2][:default].class == Fixnum ? Integer : o[2][:default].class
+        @used_short << short = o[:settings][:short] || short_from(o[:name])
+        @result[o[:name]] = o[:settings][:default] || false unless o[:settings][:optional] # set default
+        name = o[:name].to_s.gsub("_", "-")
+        klass = o[:settings][:default].class == Fixnum ? Integer : o[:settings][:default].class
 
-        args = [] << "-" + short << o[1]
+        args = [] << "-" + short << o[:description]
         if [TrueClass, FalseClass, NilClass].include?(klass) # boolean switch
           args << "--[no-]" + name
         else # argument with parameter, add class for typecheck
-          args << "--" + name + " " + o[2][:default].to_s << klass
+          args << "--" + name + " " + o[:settings][:default].to_s << klass
         end
-        p.on(*args) {|x| @result[o[0]] = x}
+        p.on(*args) {|x| @result[o[:name]] = x}
       end
 
       p.banner = @banner unless @banner.nil?

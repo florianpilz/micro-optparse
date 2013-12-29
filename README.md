@@ -185,3 +185,35 @@ Example usage of this parser:
 
 * `ruby myprogram.rb` will yield `{}`
 * `ruby myprogram.rb --file testfile.txt` will yield `{:file => "testfile.txt"}`
+
+Can I disable the short accessors?
+----------------------------------
+
+Yes you can. To disable them globally, i.e. for all arguments of the parser, just create the Parser with the default setting `:no_short => true`. To disable the short accessor of just a few arguments, add `:no_short => true` as a setting to these arguments.
+
+For example to disable short accessors for all arguments:
+
+```
+require 'rubygems' # necessary for ruby v1.8.*
+require 'micro-optparse'
+
+options = Parser.new(:no_short => true) do |p|
+  p.option :foo, "Foo"
+end.process!
+
+puts options
+```
+
+To disable short accessor of just a few arguments:
+
+```
+require 'rubygems' # necessary for ruby v1.8.*
+require 'micro-optparse'
+
+options = Parser.new do |p|
+  p.option :foo, "Foo without short", :no_short => true
+  p.option :bar, "Bar with short"
+end.process!
+
+puts options
+```

@@ -265,5 +265,12 @@ describe Parser do
       result.should include("-b, --bac")
       result.should include("-c, --cba")
     end
+
+    it "should be possible to prevent creation of short arguments" do
+      result  = `ruby spec/programs/noshort.rb --help`
+      result.should_not include("-f, --foo")
+      result.should include("--foo")
+      result.should include("-b, --bar")
+    end
   end
 end

@@ -43,12 +43,13 @@ class Parser
     @result = @default_values.clone # reset or new
     @optionparser ||= OptionParser.new do |p| # prepare only once
       @options.each do |o|
-        @used_short << short = o[:settings][:short] || short_from(o[:name])
+        @used_short << short = o[:settings][:no_short] ? nil : o[:settings][:short] || short_from(o[:name])
         @result[o[:name]] = o[:settings][:default] || false unless o[:settings][:optional] # set default
         name = o[:name].to_s.gsub("_", "-")
         klass = o[:settings][:default].class == Fixnum ? Integer : o[:settings][:default].class
 
-        args = [] << "-" + short << o[:description]
+        args = [o[:description]]
+        args << "-" + short if short
         if [TrueClass, FalseClass, NilClass].include?(klass) # boolean switch
           args << "--[no-]" + name
         else # argument with parameter, add class for typecheck

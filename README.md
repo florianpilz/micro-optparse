@@ -193,7 +193,7 @@ Yes you can. To disable them globally, i.e. for all arguments of the parser, jus
 
 For example to disable short accessors for all arguments:
 
-```
+```ruby
 require 'rubygems' # necessary for ruby v1.8.*
 require 'micro-optparse'
 
@@ -206,7 +206,7 @@ puts options
 
 To disable short accessor of just a few arguments:
 
-```
+```ruby
 require 'rubygems' # necessary for ruby v1.8.*
 require 'micro-optparse'
 

@@ -46,7 +46,7 @@ class Parser
         @used_short << short = o[:settings][:no_short] ? nil : o[:settings][:short] || short_from(o[:name])
         @result[o[:name]] = o[:settings][:default] || false unless o[:settings][:optional] # set default
         name = o[:name].to_s.gsub("_", "-")
-        klass = o[:settings][:default].class == Fixnum ? Integer : o[:settings][:default].class
+        klass = o[:settings][:default].is_a?(Integer) ? Integer : o[:settings][:default].class
 
         args = [o[:description]]
         args << "-" + short if short

@@ -1,1 +1,1 @@
-require 'micro-optparse/parser'
+require_relative './micro-optparse/parser'

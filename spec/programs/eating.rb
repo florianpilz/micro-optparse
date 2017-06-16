@@ -1,5 +1,5 @@
 require "rubygems"
-require "micro-optparse"
+require_relative "../../lib/micro-optparse"
 
 options = Parser.new do |p|
   p.version = "EatingScript 1.0 (c) Florian Pilz 2011"

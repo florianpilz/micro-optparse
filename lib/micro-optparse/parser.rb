@@ -70,8 +70,12 @@ class Parser
     rescue OptionParser::ParseError => e
       puts e.message ; exit(1)
     end
-    
+
     validate(@result) if self.respond_to?("validate")
     @result
+  end
+
+  def help!
+    process! %w(--help)
   end
 end

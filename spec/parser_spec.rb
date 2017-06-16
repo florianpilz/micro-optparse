@@ -1,5 +1,11 @@
 require "micro-optparse"
 
+RSpec.configure do |config|
+  config.expect_with :rspec do |c|
+    c.syntax = [:should, :expect]
+  end
+end
+
 describe Parser do
   before(:all) do
     @evolutionary_algorithm_parser = Parser.new do |p|

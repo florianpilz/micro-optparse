@@ -1,5 +1,5 @@
 require "rubygems"
-require "micro-optparse"
+require_relative "../../lib/micro-optparse"
 
 options = Parser.new do |p|
   p.option :foo, "Option 1", :default => "String", :no_short => true

@@ -1,4 +1,4 @@
-require "micro-optparse"
+require_relative "../lib/micro-optparse"
 
 RSpec.configure do |config|
   config.expect_with :rspec do |c|

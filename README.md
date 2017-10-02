@@ -48,12 +48,13 @@ What this piece of code does is the following:
 * it creates a help message and help options, with the banner above the options
 * it creates a version option, which displays the given text
 * it creates a long accessor for each option, according to the symbol - for example `"--verbose"` for `:verbose`
-* it crease a short accessor, which is the first character of the long accessor (automatically resolves duplicates)
+* it creates a short accessor, which is the first character of the long accessor (automatically resolves duplication)
+* it converts under_score options in Ruby to hypenated-options for the CLI, e.g. `:plus_selection` becomes `--plus-selection`
 * it checks if the class of the input and the default value match
-* it creates a switch, if no default value exist or the default value is `true` or `false`
-* when value\_in\_set is given, it validates if the input value is in the given array
-* when value_matches is given, it validates if the input value matches the regular expression
-* when value_satisfies is given, it validates if the lamda or Proc evaluates to `true`, when fed with the input value
+* it creates a switch if no default value exist or the default value is `true` or `false`
+* when `value_in_set` is given, it validates if the input value is in the given array
+* when `value_matches` is given, it validates if the input value matches the regular expression
+* when `value_satisfies` is given, it validates if the lambda or Proc evaluates to `true` when fed with the input value
 * it stores all parsed arguments and default values in the options hash, i.e. to access the value of `:mutation` in your script, write `options[:mutation]`
 
 The automatically generated help message looks like this:

@@ -18,6 +18,5 @@ Gem::Specification.new do |s|
   s.require_paths = ["lib"]
   
   s.license = "MIT"
-  s.has_rdoc = false
   s.add_development_dependency("rspec")
 end

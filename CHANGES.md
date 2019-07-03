@@ -1,6 +1,12 @@
 Version History
 ===============
 
+Version 1.2.1 (2017-10-02)
+--------------------------
+
+* Adjusted parsing of default values to look for `Integer` rather `Fixnum`
+  to be compatible with Ruby 2.4.0.
+
 Version 1.2.0 (2013-12-29)
 --------------------------
 

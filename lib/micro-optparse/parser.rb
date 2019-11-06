@@ -1,7 +1,8 @@
 require 'optparse'
 
-class Parser
+class Micro::Optparse::Parser
   attr_accessor :banner, :version
+
   def initialize(default_settings = {})
     @options = []
     @used_short = []

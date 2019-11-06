@@ -1,7 +1,7 @@
 require "rubygems"
 require_relative "../../lib/micro-optparse"
 
-options = Parser.new do |p|
+options = Micro::Optparse::Parser.new do |p|
   p.version = "EatingScript 1.0 (c) Florian Pilz 2011"
   p.banner = "This is a banner"
   p.option :verbose, "Switch on verbosity"

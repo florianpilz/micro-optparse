@@ -1,7 +1,7 @@
 require "rubygems"
 require_relative "../../lib/micro-optparse"
 
-options = Parser.new do |p|
+options = Micro::Optparse::Parser.new do |p|
   p.version = "VersionScript 0.0 (c) Florian Pilz 2011"
 end.process!
 

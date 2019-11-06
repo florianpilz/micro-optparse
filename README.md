@@ -31,7 +31,7 @@ Talk in code!
 require 'rubygems' # necessary for ruby v1.8.*
 require 'micro-optparse'
 
-options = Parser.new do |p|
+options = Micro::Optparse::Parser.new do |p|
    p.banner = "This is a fancy script, for usage see below"
    p.version = "fancy script 0.0 alpha"
    p.option :severity, "set severity", :default => 4, :value_in_set => [4,5,6,7,8]
@@ -75,7 +75,7 @@ To show some example calls and results, I will use a simplified version of the P
 require 'rubygems' # necessary for ruby v1.8.*
 require 'micro-optparse'
 
-options = Parser.new do |p|
+options = Micro::Optparse::Parser.new do |p|
    p.option :severity, "set severity", :default => 4, :value_in_set => [4,5,6,7,8]
    p.option :mutation, "set mutation", :default => "MightyMutation", :value_matches => /Mutation/
    p.option :plus_selection, "use plus-selection if set", :default => true, :optional => true
@@ -98,7 +98,7 @@ In addition, you don't need to specify all options at once, i.e. you can pass th
 require 'rubygems' # necessary for ruby v1.8.*
 require 'micro-optparse'
 
-parser = Parser.new
+parser = Micro::Optparse::Parser.new
 parser.option :eat_snickers, "How many?", :default => 0
 options1 = parser.process!(["--eat-snickers", "2"])
 options2 = parser.process!(["--eat-snickers", "1"])
@@ -133,7 +133,7 @@ Consider the following example to implement mandatory arguments yourself:
 require 'rubygems' # necessary for ruby v1.8.*
 require 'micro-optparse'
 
-options = Parser.new do |p|
+options = Micro::Optparse::Parser.new do |p|
   p.option :meal, "Choose Meal", :default => "CucumberSalad"
 end.parse!
 
@@ -157,7 +157,7 @@ For example if you want to accept multiple file names with whitespaces in them:
 require 'rubygems' # necessary for ruby v1.8.*
 require 'micro-optparse'
 
-options = Parser.new do |p|
+options = Micro::Optparse::Parser.new do |p|
   p.option :filenames, "Files which will be processed", :default => []
 end.process!
 
@@ -175,7 +175,7 @@ Yes and No. The literal answer to this question is "No", since a default value m
 require 'rubygems' # necessary for ruby v1.8.*
 require 'micro-optparse'
 
-options = Parser.new do |p|
+options = Micro::Optparse::Parser.new do |p|
   p.option :file, "File to process (optional)", :default => "String", :optional => true
 end.process!
 
@@ -198,7 +198,7 @@ For example to disable short accessors for all arguments:
 require 'rubygems' # necessary for ruby v1.8.*
 require 'micro-optparse'
 
-options = Parser.new(:no_short => true) do |p|
+options = Micro::Optparse::Parser.new(:no_short => true) do |p|
   p.option :foo, "Foo"
 end.process!
 
@@ -211,7 +211,7 @@ To disable short accessor of just a few arguments:
 require 'rubygems' # necessary for ruby v1.8.*
 require 'micro-optparse'
 
-options = Parser.new do |p|
+options = Micro::Optparse::Parser.new do |p|
   p.option :foo, "Foo without short", :no_short => true
   p.option :bar, "Bar with short"
 end.process!

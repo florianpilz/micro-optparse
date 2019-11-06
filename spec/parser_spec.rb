@@ -6,9 +6,9 @@ RSpec.configure do |config|
   end
 end
 
-describe Parser do
+describe Micro::Optparse::Parser do
   before(:all) do
-    @evolutionary_algorithm_parser = Parser.new do |p|
+    @evolutionary_algorithm_parser = Micro::Optparse::Parser.new do |p|
       p.option :severity, "set severity", :default => 4, :value_in_set => [4,5,6,7,8]
       p.option :verbose, "enable verbose output"
       p.option :mutation, "set mutation", :default => "MightyMutation", :value_matches => /Mutation/
@@ -35,7 +35,7 @@ describe Parser do
     end
 
     it "should not return a default value if the argument is declared optional" do
-      parser = Parser.new do |p|
+      parser = Micro::Optparse::Parser.new do |p|
         p.option :optarg, "optional argument", :optional => true
       end
       result = parser.process!()
@@ -93,21 +93,21 @@ describe Parser do
 
   describe "empty parser" do
     it "should be allowed to create a parser with an empty block" do
-      parser = Parser.new { }
+      parser = Micro::Optparse::Parser.new { }
       expect(parser).not_to be_nil
-      expect(parser.class).to eql Parser
+      expect(parser.class).to eql Micro::Optparse::Parser
     end
 
     it "should be allowed to create a parser without a block" do
-      parser = Parser.new
+      parser = Micro::Optparse::Parser.new
       expect(parser).not_to be_nil
-      expect(parser.class).to eql Parser
+      expect(parser.class).to eql Micro::Optparse::Parser
     end
   end
 
   describe "parsing of lists" do
     it "should parse list of arguments separated by comma when given an array as default" do
-      parser = Parser.new do |p|
+      parser = Micro::Optparse::Parser.new do |p|
         p.option :listarg, "List Argument", :default => []
       end
 
@@ -116,7 +116,7 @@ describe Parser do
     end
 
     it "should allow multiple argument lists" do
-      parser = Parser.new do |p|
+      parser = Micro::Optparse::Parser.new do |p|
         p.option :first_listarg, "List Argument", :default => []
         p.option :second_listarg, "List Argument", :default => []
       end
@@ -130,7 +130,7 @@ describe Parser do
 
   describe "default settings" do
     it "should set default settings on all options" do
-      parser = Parser.new(:optional => true) do |p|
+      parser = Micro::Optparse::Parser.new(:optional => true) do |p|
         p.option :foo, "foo argument"
         p.option :bar, "bar argument"
       end
@@ -140,7 +140,7 @@ describe Parser do
     end
 
     it "should allow to overwrite default settings" do
-      parser = Parser.new(:default => "Bar") do |p|
+      parser = Micro::Optparse::Parser.new(:default => "Bar") do |p|
         p.option :foo, "foo argument", :default => "Foo"
         p.option :bar, "bar argument"
       end
